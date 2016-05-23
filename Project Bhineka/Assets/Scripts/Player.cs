@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(PhysicsController))]
 public class Player : MonoBehaviour
 {
+    private InputHandler m_InputHandler;
     private PhysicsController m_PhysicsController;
 
     private float m_MoveSpeed = 6;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        m_InputHandler = GetComponent<InputHandler>();
         m_PhysicsController = GetComponent<PhysicsController>();
 
         m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
@@ -35,9 +37,9 @@ public class Player : MonoBehaviour
             m_Velocity.y = 0;
         }
 
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        Vector2 input = new Vector2(m_InputHandler.AxisInput(m_InputHandler.m_InputDir[0], m_InputHandler.m_InputDir[1]), Input.GetAxisRaw("Vertical"));
         
-        if(Input.GetKeyDown(KeyCode.Space) && m_PhysicsController.m_CollisionInfo.below)
+        if(m_InputHandler.m_InputDir[2] && m_PhysicsController.m_CollisionInfo.below)
         {
             m_Velocity.y = m_JumpVelocity;
         }
