@@ -4,6 +4,14 @@ using System.Collections;
 public class InputHandler : MonoBehaviour
 {
     [SerializeField]
+    private bool m_PlayerControlled;
+    public bool PlayerControlled
+    {
+        get { return PlayerControlled; }
+        set { PlayerControlled = value; }
+    }
+
+    [SerializeField]
     private KeyCode[] m_KeyCode;
     [SerializeField]
     public bool[] m_InputDir;
@@ -15,9 +23,17 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
+        if (m_PlayerControlled)
+        {
+            PlayerControls();
+        }
+    }
+
+    private void PlayerControls()
+    {
         for (int i = 0; i < m_KeyCode.Length; i++)
         {
-            if(Input.GetKeyDown(m_KeyCode[i]))
+            if (Input.GetKeyDown(m_KeyCode[i]))
             {
                 m_InputDir[i] = true;
             }
@@ -28,7 +44,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    public float AxisInput(bool minus, bool plus)
+    public float GetAxis(bool minus, bool plus)
     {
         if(minus)
         {

@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         m_InputHandler = GetComponent<InputHandler>();
+        m_InputHandler.PlayerControlled = true;
         m_PhysicsController = GetComponent<PhysicsController>();
 
         m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
             m_Velocity.y = 0;
         }
 
-        Vector2 input = new Vector2(m_InputHandler.AxisInput(m_InputHandler.m_InputDir[0], m_InputHandler.m_InputDir[1]), Input.GetAxisRaw("Vertical"));
+        Vector2 input = new Vector2(m_InputHandler.GetAxis(m_InputHandler.m_InputDir[0], m_InputHandler.m_InputDir[1]), Input.GetAxisRaw("Vertical"));
         
         if(m_InputHandler.m_InputDir[2] && m_PhysicsController.m_CollisionInfo.below)
         {
