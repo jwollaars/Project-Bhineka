@@ -46,5 +46,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-Project-Bhineka/Project Bhineka/Library/
-Project-Bhineka/Project Bhineka/Temp/
+# GitIgnore
+Project Bhineka\Library\
+Project Bhineka\Temp\
