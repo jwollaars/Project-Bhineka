@@ -7,8 +7,8 @@ public class InputHandler : MonoBehaviour
     private bool m_PlayerControlled;
     public bool PlayerControlled
     {
-        get { return PlayerControlled; }
-        set { PlayerControlled = value; }
+        get { return m_PlayerControlled; }
+        set { m_PlayerControlled = value; }
     }
 
     [SerializeField]
@@ -41,6 +41,14 @@ public class InputHandler : MonoBehaviour
             {
                 m_InputDir[i] = false;
             }
+        }
+    }
+
+    public void ResetControls()
+    {
+        for (int i = 0; i < m_KeyCode.Length; i++)
+        {
+            m_InputDir[i] = false;
         }
     }
 

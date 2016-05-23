@@ -66,6 +66,15 @@ public class PhysicsController : MonoBehaviour
 
                 m_CollisionInfo.left = directionX == -1;
                 m_CollisionInfo.right = directionX == 1;
+
+                if (m_CollisionInfo.left)
+                {
+                    m_CollisionInfo.gLeft = hit.collider.gameObject;
+                }
+                if (m_CollisionInfo.right)
+                {
+                    m_CollisionInfo.gRight = hit.collider.gameObject;
+                }
             }
         }
     }
@@ -90,6 +99,15 @@ public class PhysicsController : MonoBehaviour
 
                 m_CollisionInfo.below = directionY == -1;
                 m_CollisionInfo.above = directionY == 1;
+
+                if(m_CollisionInfo.below)
+                {
+                    m_CollisionInfo.gBelow = hit.collider.gameObject;
+                }
+                if (m_CollisionInfo.above)
+                {
+                    m_CollisionInfo.gAbove = hit.collider.gameObject;
+                }
             }
         }
     }
@@ -128,10 +146,16 @@ public class PhysicsController : MonoBehaviour
         public bool above, below;
         public bool left, right;
 
+        public GameObject gAbove, gBelow;
+        public GameObject gLeft, gRight;
+
         public void Reset()
         {
             above = below = false;
             left = right = false;
+
+            gAbove = gBelow = null;
+            gLeft = gRight = null;
         }
     }
 }
