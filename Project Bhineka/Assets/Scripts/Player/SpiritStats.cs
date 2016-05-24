@@ -19,6 +19,20 @@ public class SpiritStats : MonoBehaviour
         StartStats();
     }
 
+    void Update()
+    {
+        CapStat(m_MainStats.level, 0, 100);
+        CapStat(m_MainStats.experience, 0, m_MainStats.levelUpExperience);
+        CapStat(m_MainStats.spiritPower, 0, 100);
+
+        CapStat(m_SubStats.stamina, 0, 100);
+        CapStat(m_SubStats.strength, 0, 100);
+        CapStat(m_SubStats.defense, 0, 100);
+        CapStat(m_SubStats.jumpPower, 0, 5);
+        CapStat(m_SubStats.dashPower, 0, 5);
+        CapStat(m_SubStats.levitatePower, 0, 5);
+    }
+
     private void StartStats()
     {
         m_MainStats.level = 1;
@@ -28,6 +42,26 @@ public class SpiritStats : MonoBehaviour
         m_SubStats.jumpPower = 4;
         m_SubStats.dashPower = 4;
         m_SubStats.levitatePower = 5;
+    }
+
+    private void IncreaseStat(int stat, int value)
+    {
+        stat += value;
+    }
+    private void DecreaseStat(int stat, int value)
+    {
+        stat -= value;
+    }
+    private void CapStat(int stat, int min, int max)
+    {
+        if (stat < min)
+        {
+            stat = min;
+        }
+        else if (stat > max)
+        {
+            stat = max;
+        }
     }
 
     public struct MainStats

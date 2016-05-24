@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
     private InputHandler m_InputHandler;
     private PhysicsController m_PhysicsController;
     private Renderer m_Renderer;
+    
+    private GameObject m_GameManager;
+    private CharacterUI m_CharacterUI;
 
     [SerializeField]
     private Material[] m_Materials;
@@ -39,6 +42,9 @@ public class Player : MonoBehaviour
         m_InputHandler = GetComponent<InputHandler>();
         m_PhysicsController = GetComponent<PhysicsController>();
 
+        m_GameManager = GameObject.Find("GameManager");
+        m_CharacterUI = m_GameManager.GetComponent<CharacterUI>();
+
         if (m_InputHandler.PlayerControlled)
         {
             CalculateStats();
@@ -68,6 +74,8 @@ public class Player : MonoBehaviour
             m_Spirit.SetActive(true);
             m_Spirit.GetComponent<Player>().CalculateNormal();
             m_Spirit.transform.position = transform.position + new Vector3(0, 2);
+            m_Spirit.transform.parent = null;
+            m_CharacterUI.UpdateBodyInfo();
             m_InputHandler.PlayerControlled = false;
             m_InputHandler.ResetControls();
         }
@@ -83,6 +91,8 @@ public class Player : MonoBehaviour
             if(collisionObj[i] != null && Input.GetKeyDown(KeyCode.E) && gameObject.name == "Spirit")
             {
                 m_Spirit.SetActive(false);
+                m_Spirit.transform.parent = collisionObj[i].transform;
+                m_CharacterUI.UpdateBodyInfo();
                 m_InputHandler.ResetControls();
                 collisionObj[i].GetComponent<InputHandler>().PlayerControlled = true;
                 collisionObj[i].GetComponent<Player>().CalculateStats();
@@ -124,16 +134,16 @@ public class Player : MonoBehaviour
 
         m_MoveSpeed = 2 * m_SpiritStats.GetSubStats.dashPower;
 
-        Debug.Log("Grav: " + m_Gravity);
-        Debug.Log("JumpVel: " + m_JumpVelocity);
-        Debug.Log("MoveSpeed: " + m_MoveSpeed);
+        //Debug.Log("Grav: " + m_Gravity);
+        //Debug.Log("JumpVel: " + m_JumpVelocity);
+        //Debug.Log("MoveSpeed: " + m_MoveSpeed);
     }
 
     private void CalculateNormal()
     {
         m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
         m_JumpVelocity = Mathf.Abs(m_Gravity) * m_timeToJumpApex;
-
-        m_MoveSpeed = 2 * m_SpiritStats.GetSubStats.dashPower;
+         
+        m_MoveSpeed = 4;
     }
 }
