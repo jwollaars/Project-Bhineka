@@ -47,5 +47,7 @@ Temporary Items
 .apdisk
 
 # GitIgnore
-Project Bhineka/Library
-Project Bhineka/Temp
+Project Bhineka/Library/
+Project Bhineka\Library\
+Project Bhineka/Temp/
+Project Bhineka\Temp\
