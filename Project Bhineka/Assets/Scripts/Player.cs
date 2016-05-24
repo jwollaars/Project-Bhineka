@@ -6,11 +6,16 @@ public class Player : MonoBehaviour
 {
     private InputHandler m_InputHandler;
     private PhysicsController m_PhysicsController;
+    private Renderer m_Renderer;
+
+    [SerializeField]
+    private Material[] m_Materials;
 
     [SerializeField]
     private GameObject m_Spirit;
+    private SpiritStats m_SpiritStats;
 
-    private float m_MoveSpeed = 6;
+    private float m_MoveSpeed;
     private float m_AccelerationTimeGrounded = 0.1f;
     private float m_AccelerationTimeAirborne = 0.2f;
     private float m_VelocityXSmoothing;
@@ -28,22 +33,43 @@ public class Player : MonoBehaviour
     void Start()
     {
         m_Spirit.SetActive(false);
+        m_SpiritStats = m_Spirit.GetComponent<SpiritStats>();
 
+        m_Renderer = GetComponent<Renderer>();
         m_InputHandler = GetComponent<InputHandler>();
-
         m_PhysicsController = GetComponent<PhysicsController>();
 
-        m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
-        m_JumpVelocity = Mathf.Abs(m_Gravity) * m_timeToJumpApex;
+        if (m_InputHandler.PlayerControlled)
+        {
+            CalculateStats();
+        }
+        else
+        {
+            CalculateNormal();
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && gameObject.name != "Spirit" && m_InputHandler.PlayerControlled)
+        if (gameObject != m_Spirit)
+        {
+            if (m_InputHandler.PlayerControlled && m_Renderer.material != m_Materials[1])
+            {
+                m_Renderer.material = m_Materials[1];
+            }
+            else if (!m_InputHandler.PlayerControlled && m_Renderer.material != m_Materials[0])
+            {
+                m_Renderer.material = m_Materials[0];
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) && gameObject != m_Spirit && m_InputHandler.PlayerControlled)
         {
             m_Spirit.SetActive(true);
+            m_Spirit.GetComponent<Player>().CalculateNormal();
             m_Spirit.transform.position = transform.position + new Vector3(0, 2);
             m_InputHandler.PlayerControlled = false;
+            m_InputHandler.ResetControls();
         }
 
         GameObject[] collisionObj = new GameObject[4];
@@ -57,8 +83,9 @@ public class Player : MonoBehaviour
             if(collisionObj[i] != null && Input.GetKeyDown(KeyCode.E) && gameObject.name == "Spirit")
             {
                 m_Spirit.SetActive(false);
-                m_Spirit.GetComponent<InputHandler>().ResetControls();
+                m_InputHandler.ResetControls();
                 collisionObj[i].GetComponent<InputHandler>().PlayerControlled = true;
+                collisionObj[i].GetComponent<Player>().CalculateStats();
             }
         }
 
@@ -79,7 +106,7 @@ public class Player : MonoBehaviour
 
         m_Velocity.x = Mathf.SmoothDamp(m_Velocity.x, targetVelocityX, ref m_VelocityXSmoothing, (m_PhysicsController.m_CollisionInfo.below) ? m_AccelerationTimeGrounded : m_AccelerationTimeAirborne);
 
-        if (gameObject.name != "Spirit")
+        if (gameObject != m_Spirit)
         {
             m_Velocity.y += m_Gravity * Time.deltaTime;
         }
@@ -88,5 +115,25 @@ public class Player : MonoBehaviour
             m_Velocity.y = Mathf.SmoothDamp(m_Velocity.y, targetVelocityY, ref m_VelocityYSmoothing, (m_PhysicsController.m_CollisionInfo.below) ? m_AccelerationTimeGrounded : m_AccelerationTimeAirborne);
         }
         m_PhysicsController.Move(m_Velocity * Time.deltaTime);
+    }
+
+    public void CalculateStats()
+    {
+        m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
+        m_JumpVelocity = Mathf.Abs(m_Gravity) * m_timeToJumpApex * (m_SpiritStats.GetSubStats.jumpPower / 2);
+
+        m_MoveSpeed = 2 * m_SpiritStats.GetSubStats.dashPower;
+
+        Debug.Log("Grav: " + m_Gravity);
+        Debug.Log("JumpVel: " + m_JumpVelocity);
+        Debug.Log("MoveSpeed: " + m_MoveSpeed);
+    }
+
+    private void CalculateNormal()
+    {
+        m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
+        m_JumpVelocity = Mathf.Abs(m_Gravity) * m_timeToJumpApex;
+
+        m_MoveSpeed = 2 * m_SpiritStats.GetSubStats.dashPower;
     }
 }

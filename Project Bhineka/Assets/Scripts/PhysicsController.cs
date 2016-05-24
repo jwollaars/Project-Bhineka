@@ -54,15 +54,18 @@ public class PhysicsController : MonoBehaviour
         for (int i = 0; i < m_HorizontalRayCount; i++)
         {
             Vector2 rayOrigin = (directionX == -1) ? m_RaycastOrigins.bottomLeft : m_RaycastOrigins.bottomRight;
-            rayOrigin += Vector2.up * (m_HorizontalRaySpacing * 1);
+            rayOrigin += Vector2.up * (m_HorizontalRaySpacing * i);
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, m_CollisionMasks);
 
             Debug.DrawRay(rayOrigin, Vector2.right * directionX * rayLength, Color.red);
 
             if (hit)
             {
-                velocity.x = (hit.distance - m_SkinWidth) * directionX;
-                rayLength = hit.distance;
+                if (gameObject.name != "Spirit")
+                {
+                    velocity.x = (hit.distance - m_SkinWidth) * directionX;
+                    rayLength = hit.distance;
+                }
 
                 m_CollisionInfo.left = directionX == -1;
                 m_CollisionInfo.right = directionX == 1;
@@ -71,7 +74,7 @@ public class PhysicsController : MonoBehaviour
                 {
                     m_CollisionInfo.gLeft = hit.collider.gameObject;
                 }
-                if (m_CollisionInfo.right)
+                else if (m_CollisionInfo.right)
                 {
                     m_CollisionInfo.gRight = hit.collider.gameObject;
                 }
@@ -87,15 +90,18 @@ public class PhysicsController : MonoBehaviour
         for (int i = 0; i < m_VerticalRayCount; i++)
         {
             Vector2 rayOrigin = (directionY == -1) ? m_RaycastOrigins.bottomLeft : m_RaycastOrigins.topLeft;
-            rayOrigin += Vector2.right * (m_VerticalRaySpacing * 1 + velocity.x);
+            rayOrigin += Vector2.right * (m_VerticalRaySpacing * i + velocity.x);
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, m_CollisionMasks);
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY * rayLength, Color.red);
 
             if(hit)
             {
-                velocity.y = (hit.distance - m_SkinWidth) * directionY;
-                rayLength = hit.distance;
+                if (gameObject.name != "Spirit")
+                {
+                    velocity.y = (hit.distance - m_SkinWidth) * directionY;
+                    rayLength = hit.distance;
+                }
 
                 m_CollisionInfo.below = directionY == -1;
                 m_CollisionInfo.above = directionY == 1;
@@ -104,7 +110,7 @@ public class PhysicsController : MonoBehaviour
                 {
                     m_CollisionInfo.gBelow = hit.collider.gameObject;
                 }
-                if (m_CollisionInfo.above)
+                else if (m_CollisionInfo.above)
                 {
                     m_CollisionInfo.gAbove = hit.collider.gameObject;
                 }
