@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private InputHandler m_InputHandler;
     private PhysicsController m_PhysicsController;
     private Renderer m_Renderer;
+    private CameraBehaviour m_CameraBehaviour;
     
     private GameObject m_GameManager;
     private CharacterUI m_CharacterUI;
@@ -35,24 +36,17 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        m_Spirit.SetActive(false);
-        m_SpiritStats = m_Spirit.GetComponent<SpiritStats>();
+        m_SpiritStats = m_Spirit.GetComponent<SpiritStats>(); 
 
         m_Renderer = GetComponent<Renderer>();
         m_InputHandler = GetComponent<InputHandler>();
         m_PhysicsController = GetComponent<PhysicsController>();
+        m_CameraBehaviour = Camera.main.GetComponent<CameraBehaviour>();
 
         m_GameManager = GameObject.Find("GameManager");
         m_CharacterUI = m_GameManager.GetComponent<CharacterUI>();
 
-        if (m_InputHandler.PlayerControlled)
-        {
-            CalculateStats();
-        }
-        else
-        {
-            CalculateNormal();
-        }
+        CalculateNormal();
     }
 
     void Update()
@@ -71,13 +65,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && gameObject != m_Spirit && m_InputHandler.PlayerControlled)
         {
-            m_Spirit.SetActive(true);
-            m_Spirit.GetComponent<Player>().CalculateNormal();
-            m_Spirit.transform.position = transform.position + new Vector3(0, 2);
-            m_Spirit.transform.parent = null;
-            m_CharacterUI.UpdateBodyInfo();
-            m_InputHandler.PlayerControlled = false;
-            m_InputHandler.ResetControls();
+            Die();
         }
 
         GameObject[] collisionObj = new GameObject[4];
@@ -90,12 +78,7 @@ public class Player : MonoBehaviour
         {
             if(collisionObj[i] != null && Input.GetKeyDown(KeyCode.E) && gameObject.name == "Spirit")
             {
-                m_Spirit.SetActive(false);
-                m_Spirit.transform.parent = collisionObj[i].transform;
-                m_CharacterUI.UpdateBodyInfo();
-                m_InputHandler.ResetControls();
-                collisionObj[i].GetComponent<InputHandler>().PlayerControlled = true;
-                collisionObj[i].GetComponent<Player>().CalculateStats();
+                EnterCreature(collisionObj[i]);
             }
         }
 
@@ -127,6 +110,28 @@ public class Player : MonoBehaviour
         m_PhysicsController.Move(m_Velocity * Time.deltaTime);
     }
 
+    public void Die()
+    {
+        m_Spirit.SetActive(true);
+        m_Spirit.GetComponent<Player>().CalculateNormal();
+        m_Spirit.transform.position = transform.position + new Vector3(0, 2);
+        m_Spirit.transform.parent = null;
+        m_CharacterUI.UpdateBodyInfo();
+        m_InputHandler.PlayerControlled = false;
+        m_InputHandler.ResetControls();
+        m_CameraBehaviour.SetTarget(m_Spirit);
+    }
+    public void EnterCreature(GameObject gameObj)
+    {
+        m_Spirit.SetActive(false);
+        m_Spirit.transform.parent = gameObj.transform;
+        m_CharacterUI.UpdateBodyInfo();
+        m_InputHandler.ResetControls();
+        gameObj.GetComponent<InputHandler>().PlayerControlled = true;
+        gameObj.GetComponent<Player>().CalculateStats();
+        m_CameraBehaviour.SetTarget(gameObj);
+    }
+
     public void CalculateStats()
     {
         m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);
@@ -138,7 +143,6 @@ public class Player : MonoBehaviour
         //Debug.Log("JumpVel: " + m_JumpVelocity);
         //Debug.Log("MoveSpeed: " + m_MoveSpeed);
     }
-
     private void CalculateNormal()
     {
         m_Gravity = -(2 * m_JumpHeigth) / Mathf.Pow(m_timeToJumpApex, 2);

@@ -21,16 +21,16 @@ public class SpiritStats : MonoBehaviour
 
     void Update()
     {
-        CapStat(m_MainStats.level, 0, 100);
-        CapStat(m_MainStats.experience, 0, m_MainStats.levelUpExperience);
-        CapStat(m_MainStats.spiritPower, 0, 100);
+        CapStat(ref m_MainStats.level, 0, 100);
+        CapStat(ref m_MainStats.experience, 0, m_MainStats.levelUpExperience);
+        CapStat(ref m_MainStats.spiritPower, 0, 100);
 
-        CapStat(m_SubStats.stamina, 0, 100);
-        CapStat(m_SubStats.strength, 0, 100);
-        CapStat(m_SubStats.defense, 0, 100);
-        CapStat(m_SubStats.jumpPower, 0, 5);
-        CapStat(m_SubStats.dashPower, 0, 5);
-        CapStat(m_SubStats.levitatePower, 0, 5);
+        CapStat(ref m_SubStats.stamina, 0, 100);
+        CapStat(ref m_SubStats.strength, 0, 100);
+        CapStat(ref m_SubStats.defense, 0, 100);
+        CapStat(ref m_SubStats.jumpPower, 0, 5);
+        CapStat(ref m_SubStats.dashPower, 0, 5);
+        CapStat(ref m_SubStats.levitatePower, 0, 5);
     }
 
     private void StartStats()
@@ -44,15 +44,15 @@ public class SpiritStats : MonoBehaviour
         m_SubStats.levitatePower = 5;
     }
 
-    private void IncreaseStat(int stat, int value)
+    private void IncreaseStat(ref int stat, int value)
     {
         stat += value;
     }
-    private void DecreaseStat(int stat, int value)
+    private void DecreaseStat(ref int stat, int value)
     {
         stat -= value;
     }
-    private void CapStat(int stat, int min, int max)
+    private void CapStat(ref int stat, int min, int max)
     {
         if (stat < min)
         {

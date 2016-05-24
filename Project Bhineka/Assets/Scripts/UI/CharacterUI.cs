@@ -23,6 +23,9 @@ public class CharacterUI : MonoBehaviour
     [SerializeField]
     private Text m_Infection;
 
+    [SerializeField]
+    private Text m_Health;
+
     void Start()
     {
         m_SpiritStats = m_Spirit.GetComponent<SpiritStats>();
@@ -39,13 +42,15 @@ public class CharacterUI : MonoBehaviour
         {
             m_Hunger.text = "Hunger: " + m_BodyStats.GetMainStats.hunger; 
             m_Thirst.text = "Thirst: " + m_BodyStats.GetMainStats.thirst;
-            m_Infection.text = "Infection" + m_BodyStats.GetMainStats.infection; 
+            m_Infection.text = "Infection: " + m_BodyStats.GetMainStats.infection;
+            m_Health.text = "Health: " + m_BodyStats.GetMainStats.health; 
         }
         else
         {
             m_Hunger.text = "No physical body";
             m_Thirst.text = "No physical body";
             m_Infection.text = "No physical body";
+            m_Health.text = "No physical body"; 
         }
     }
 
