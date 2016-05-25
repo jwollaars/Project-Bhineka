@@ -9,6 +9,8 @@ public class BodyStats : MonoBehaviour
         get { return m_MainStats; }
     }
 
+    private Player m_Player;
+
     [SerializeField]
     private int test;
     [SerializeField]
@@ -16,8 +18,13 @@ public class BodyStats : MonoBehaviour
 
     void Start()
     {
-        timer = new float[6];
         StartStats();
+
+        //Control hunger and thirst
+        Coroutine hungerRoutine = StartCoroutine(HungerControl(20f));
+        Coroutine thirstRoutine = StartCoroutine(ThirstControl(10f));
+
+        Coroutine badConditionControl = StartCoroutine(BadConditionControl(2f));
     }
 
     void Update()
@@ -31,36 +38,44 @@ public class BodyStats : MonoBehaviour
         CapStat(ref m_MainStats.attackPower, 0, 100);
         CapStat(ref m_MainStats.defensePower, 0, 100);
 
+        AliveCheck();
+
         //Control hunger and thirst
-        ConditionControl(ref m_MainStats.hunger, 1, 60, 0);
-        ConditionControl(ref m_MainStats.thirst, 1, 45, 1);
+        //ConditionControl(ref m_MainStats.hunger, 1, 20, 0);
+        //ConditionControl(ref m_MainStats.thirst, 1, 10, 1);
 
         //Decrease health by hunger, thirst or infection
-        BadCondition(ref m_MainStats.health, m_MainStats.hunger, 90, 2); 
-        BadCondition(ref m_MainStats.health, m_MainStats.thirst, 80, 3); 
-        BadCondition(ref m_MainStats.health, m_MainStats.infection, 30, 4); 
+        //BadCondition(ref m_MainStats.health, m_MainStats.hunger, 90, 2); 
+        //BadCondition(ref m_MainStats.health, m_MainStats.thirst, 80, 3); 
+        //BadCondition(ref m_MainStats.health, m_MainStats.infection, 30, 4); 
     }
 
     private void StartStats()
     {
-        m_MainStats.health = 100;
+        m_MainStats.health = 5;
         m_MainStats.conciousness = 0;
 
-        m_MainStats.hunger = 0;
-        m_MainStats.thirst = 0;
+        m_MainStats.hunger = 59;
+        m_MainStats.thirst = 59;
         m_MainStats.infection = 0;
 
         m_MainStats.attackPower = 1;
         m_MainStats.defensePower = 1;
     }
 
-    private void IncreaseStat(ref int stat, int value)
+    private void IncreaseStat(ref int stat, int value, int min, int max)
     {
-        stat += value;
+        if (stat >= min && stat <= max)
+        {
+            stat += value;
+        }
     }
-    private void DecreaseStat(ref int stat, int value)
+    private void DecreaseStat(ref int stat, int value, int min, int max)
     {
-        stat -= value;
+        if (stat >= min && stat <= max)
+        {
+            stat -= value;
+        }
     }
 
     private void CapStat(ref int stat, int min, int max)
@@ -75,33 +90,45 @@ public class BodyStats : MonoBehaviour
         }
     }
 
-    private void ConditionControl(ref int stat, int value, float time, int timerIndex)
-    {
-        if (timer[timerIndex] <= time)
-        {
-            timer[timerIndex] += Time.deltaTime;
-        }
-        else
-        {
-            IncreaseStat(ref stat, 1);
-            timer[timerIndex] = 0;
-        }
-    }
-    private void BadCondition(ref int stat, int checkStat, int badCondition, int timerIndex)
+    private void BadCondition(ref int stat, int checkStat, int badCondition)
     {
         if (checkStat >= badCondition)
         {
-            if (timer[timerIndex] <= 5.0f)
+            DecreaseStat(ref stat, 2, 0, 100);
+        }
+    }
+    private void AliveCheck()
+    {
+        if(m_MainStats.health <= 0)
+        {
+            if (transform.parent != null)
             {
-                timer[timerIndex] += Time.deltaTime;
-            }
-            else
-            {
-                DecreaseStat(ref stat, 2);
-                timer[timerIndex] = 0;
+                m_Player = transform.parent.gameObject.GetComponent<Player>();
             }
         }
     }
+
+    private IEnumerator HungerControl(float time)
+    {
+        IncreaseStat(ref m_MainStats.hunger, 1, 0, 100);
+        yield return new WaitForSeconds(time / Time.timeScale);
+        StartCoroutine(HungerControl(time));
+    }
+    private IEnumerator ThirstControl(float time)
+    {
+        IncreaseStat(ref m_MainStats.thirst, 1, 0, 100);
+        yield return new WaitForSeconds(time / Time.timeScale);
+        StartCoroutine(ThirstControl(time));
+    }
+    private IEnumerator BadConditionControl(float time)
+    {
+        BadCondition(ref m_MainStats.health, m_MainStats.hunger, 70);
+        BadCondition(ref m_MainStats.health, m_MainStats.thirst, 60);
+        BadCondition(ref m_MainStats.health, m_MainStats.infection, 30); 
+        yield return new WaitForSeconds(time / Time.timeScale);
+        StartCoroutine(BadConditionControl(time));
+    }
+    
 
     public struct MainStats
     {

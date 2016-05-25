@@ -39,9 +39,9 @@ public class SpiritStats : MonoBehaviour
         m_MainStats.experience = 0;
         m_MainStats.levelUpExperience = 100 / 2 * m_MainStats.level;
 
-        m_SubStats.jumpPower = 4;
-        m_SubStats.dashPower = 4;
-        m_SubStats.levitatePower = 5;
+        m_SubStats.jumpPower = 2;
+        m_SubStats.dashPower = 2;
+        m_SubStats.levitatePower = 2;
     }
 
     private void IncreaseStat(ref int stat, int value)

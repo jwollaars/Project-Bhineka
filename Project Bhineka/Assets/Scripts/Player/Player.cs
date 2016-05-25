@@ -121,6 +121,7 @@ public class Player : MonoBehaviour
         m_InputHandler.ResetControls();
         m_CameraBehaviour.SetTarget(m_Spirit);
     }
+
     public void EnterCreature(GameObject gameObj)
     {
         m_Spirit.SetActive(false);
