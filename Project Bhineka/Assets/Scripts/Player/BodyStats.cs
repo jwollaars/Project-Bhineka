@@ -3,13 +3,13 @@ using System.Collections;
 
 public class BodyStats : MonoBehaviour
 {
-    private MainStats m_MainStats;
+    private MainStats m_MainStats; 
     public MainStats GetMainStats
     {
         get { return m_MainStats; }
     }
 
-    private Player m_Player;
+    private CreatureController m_CreatureController;
 
     [SerializeField]
     private int test;
@@ -24,7 +24,7 @@ public class BodyStats : MonoBehaviour
         Coroutine hungerRoutine = StartCoroutine(HungerControl(20f));
         Coroutine thirstRoutine = StartCoroutine(ThirstControl(10f));
 
-        Coroutine badConditionControl = StartCoroutine(BadConditionControl(2f));
+        Coroutine badConditionControl = StartCoroutine(BadConditionControl(2f)); 
     }
 
     void Update()
@@ -52,11 +52,11 @@ public class BodyStats : MonoBehaviour
 
     private void StartStats()
     {
-        m_MainStats.health = 5;
+        m_MainStats.health = 100;
         m_MainStats.conciousness = 0;
 
-        m_MainStats.hunger = 59;
-        m_MainStats.thirst = 59;
+        m_MainStats.hunger = 0;
+        m_MainStats.thirst = 0;
         m_MainStats.infection = 0;
 
         m_MainStats.attackPower = 1;
@@ -103,7 +103,8 @@ public class BodyStats : MonoBehaviour
         {
             if (transform.parent != null)
             {
-                m_Player = transform.parent.gameObject.GetComponent<Player>();
+                m_CreatureController = transform.parent.gameObject.GetComponent<CreatureController>();
+                //m_PlayerController.Die(); 
             }
         }
     }

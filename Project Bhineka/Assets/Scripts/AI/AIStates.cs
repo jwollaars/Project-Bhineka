@@ -10,19 +10,19 @@ public class IdleState : AIState
         m_AIBehaviour = aiBehaviour;
     }
 
-    public void Enter()
+    public void Enter() 
     {
-        Debug.Log("Enter");
+        
     }
 
     public void Execute()
     {
-        Debug.Log("Execute");
+        
     }
 
     public void Exit()
     {
-        Debug.Log("Exit");
+        
     }
 }
 
@@ -37,16 +37,16 @@ public class RoamingState : AIState
 
     public void Enter()
     {
-        Debug.Log("Enter");
+        
     }
 
     public void Execute()
     {
-        Debug.Log("Execute");
+        
     }
 
     public void Exit()
     {
-        Debug.Log("Exit");
+        
     }
 }

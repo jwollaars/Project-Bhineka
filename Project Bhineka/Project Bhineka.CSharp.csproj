@@ -18,6 +18,7 @@
     <UnityBuildTarget>WebPlayer:6</UnityBuildTarget>
     <UnityVersion>5.3.4f1</UnityVersion>
     <RootNamespace></RootNamespace>
+    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,12 +56,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -69,12 +64,15 @@
     <Compile Include="Assets\Scripts\AI\AIBehaviour.cs" />
     <Compile Include="Assets\Scripts\AI\AIStates.cs" />
     <Compile Include="Assets\Scripts\CameraBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Nest.cs" />
     <Compile Include="Assets\Scripts\Player\BodyStats.cs" />
+    <Compile Include="Assets\Scripts\Player\CreatureController.cs" />
     <Compile Include="Assets\Scripts\Player\InputHandler.cs" />
     <Compile Include="Assets\Scripts\Player\PhysicsController.cs" />
-    <Compile Include="Assets\Scripts\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerCheck.cs" />
+    <Compile Include="Assets\Scripts\Player\SpiritController.cs" />
     <Compile Include="Assets\Scripts\Player\SpiritStats.cs" />
     <Compile Include="Assets\Scripts\UI\CharacterUI.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
