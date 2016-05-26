@@ -13,6 +13,8 @@ public class Nest : MonoBehaviour
 
     void Start()
     {
+        m_SpawnCreatures = Random.Range(1, 4);
+
         for (int i = 0; i < m_SpawnCreatures; i++)
         {
             float randomOffset = Random.Range(-2f, 2f);

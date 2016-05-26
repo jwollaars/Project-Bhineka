@@ -8,6 +8,7 @@ public class CreatureController : MonoBehaviour
     private InputHandler m_InputHandler;
     private PhysicsController m_PhysicsController;
     private CameraBehaviour m_CameraBehaviour;
+    private AIBehaviour m_AIBehaviour;
 
     private GameObject m_GameManager;
     private CharacterUI m_CharacterUI;
@@ -39,6 +40,7 @@ public class CreatureController : MonoBehaviour
         m_Renderer = GetComponent<Renderer>();
         m_InputHandler = GetComponent<InputHandler>();
         m_PhysicsController = GetComponent<PhysicsController>();
+        m_AIBehaviour = GetComponent<AIBehaviour>();
         m_CameraBehaviour = Camera.main.GetComponent<CameraBehaviour>();
 
         m_GameManager = GameObject.Find("GameManager");
@@ -68,19 +70,15 @@ public class CreatureController : MonoBehaviour
             m_Velocity.y = 0;
         }
 
-        if (m_Spirit != null)
+        Vector2 input = new Vector2(m_InputHandler.GetAxis(m_InputHandler.m_InputDir[0], m_InputHandler.m_InputDir[1]), m_InputHandler.GetAxis(m_InputHandler.m_InputDir[2], m_InputHandler.m_InputDir[3]));
+
+        if (m_InputHandler.m_InputDir[2] && m_PhysicsController.m_CollisionInfo.below)
         {
-            Vector2 input = new Vector2(m_InputHandler.GetAxis(m_InputHandler.m_InputDir[0], m_InputHandler.m_InputDir[1]), m_InputHandler.GetAxis(m_InputHandler.m_InputDir[2], m_InputHandler.m_InputDir[3]));
-
-            if (m_InputHandler.m_InputDir[2] && m_PhysicsController.m_CollisionInfo.below)
-            {
-                m_Velocity.y = m_JumpVelocity;
-            }
-
-            float targetVelocityX = input.x * m_MoveSpeed;
-            float targetVelocityY = input.y * m_MoveSpeed;
-            m_Velocity.x = Mathf.SmoothDamp(m_Velocity.x, targetVelocityX, ref m_VelocityXSmoothing, (m_PhysicsController.m_CollisionInfo.below) ? m_AccelerationTimeGrounded : m_AccelerationTimeAirborne);
+            m_Velocity.y = m_JumpVelocity;
         }
+
+        float targetVelocityX = input.x * m_MoveSpeed;
+        m_Velocity.x = Mathf.SmoothDamp(m_Velocity.x, targetVelocityX, ref m_VelocityXSmoothing, (m_PhysicsController.m_CollisionInfo.below) ? m_AccelerationTimeGrounded : m_AccelerationTimeAirborne);
 
         m_Velocity.y += m_Gravity * Time.deltaTime;
         m_PhysicsController.Move(m_Velocity * Time.deltaTime);
@@ -96,6 +94,11 @@ public class CreatureController : MonoBehaviour
 
         m_InputHandler.PlayerControlled = false;
         m_InputHandler.ResetControls();
+
+        m_AIBehaviour.ChangeState(m_AIBehaviour.m_CurrentState);
+
+        CalculateNormal();
+
         m_CameraBehaviour.SetTarget(m_Spirit);
     }
     

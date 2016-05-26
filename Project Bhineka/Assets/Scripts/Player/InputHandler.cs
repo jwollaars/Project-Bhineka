@@ -27,10 +27,6 @@ public class InputHandler : MonoBehaviour
         {
             PlayerControls();
         }
-        else
-        {
-            AIControls();
-        }
     }
 
     private void PlayerControls()
@@ -46,10 +42,6 @@ public class InputHandler : MonoBehaviour
                 m_InputDir[i] = false;
             }
         }
-    }
-
-    private void AIControls()
-    {
     }
 
     public void ResetControls()
