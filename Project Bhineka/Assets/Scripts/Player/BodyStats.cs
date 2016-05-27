@@ -11,6 +11,10 @@ public class BodyStats : MonoBehaviour
 
     private CreatureController m_CreatureController;
 
+    private Coroutine m_HungerRoutine;
+    private Coroutine m_ThirstRoutine;
+    private Coroutine m_BadCoroutineControl;
+
     [SerializeField]
     private int test;
     [SerializeField]
@@ -21,22 +25,22 @@ public class BodyStats : MonoBehaviour
         StartStats();
 
         //Control hunger and thirst
-        Coroutine hungerRoutine = StartCoroutine(HungerControl(20f));
-        Coroutine thirstRoutine = StartCoroutine(ThirstControl(10f));
+        m_HungerRoutine = StartCoroutine(HungerControl(20f));
+        m_ThirstRoutine = StartCoroutine(ThirstControl(10f));
 
-        Coroutine badConditionControl = StartCoroutine(BadConditionControl(2f)); 
+        m_BadCoroutineControl = StartCoroutine(BadConditionControl(2f)); 
     }
 
     void Update()
     {
         //Make sure stat is never lower than min or heigher than max
-        CapStat(ref m_MainStats.health, 0, 100);
-        CapStat(ref m_MainStats.conciousness, 0, 100);
-        CapStat(ref m_MainStats.hunger, 0, 100);
-        CapStat(ref m_MainStats.thirst, 0, 100);
-        CapStat(ref m_MainStats.infection, 0, 100);
-        CapStat(ref m_MainStats.attackPower, 0, 100);
-        CapStat(ref m_MainStats.defensePower, 0, 100);
+        //CapStat(ref m_MainStats.health, 0, 100);
+        //CapStat(ref m_MainStats.conciousness, 0, 100);
+        //CapStat(ref m_MainStats.hunger, 0, 100);
+        //CapStat(ref m_MainStats.thirst, 0, 100);
+        //CapStat(ref m_MainStats.infection, 0, 100);
+        //CapStat(ref m_MainStats.attackPower, 0, 100);
+        //CapStat(ref m_MainStats.defensePower, 0, 100);
 
         AliveCheck();
 

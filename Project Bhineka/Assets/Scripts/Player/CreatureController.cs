@@ -95,7 +95,7 @@ public class CreatureController : MonoBehaviour
         m_InputHandler.PlayerControlled = false;
         m_InputHandler.ResetControls();
 
-        m_AIBehaviour.ChangeState(m_AIBehaviour.m_CurrentState);
+        m_AIBehaviour.ChangeState(m_AIBehaviour.GetIdleState);
 
         CalculateNormal();
 

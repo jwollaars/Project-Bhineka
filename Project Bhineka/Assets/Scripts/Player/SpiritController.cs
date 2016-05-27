@@ -72,10 +72,12 @@ public class SpiritController : MonoBehaviour
         gameObject.SetActive(false);
         CreatureController cc = creature.GetComponent<CreatureController>();
         InputHandler ih = creature.GetComponent<InputHandler>();
+        AIBehaviour ai = creature.GetComponent<AIBehaviour>();
 
         cc.SetSpirit(gameObject);
         cc.CalculateStats();
         ih.PlayerControlled = true;
+        ai.ChangeState(ai.GetSpiritState);
 
         m_CharacterUI.UpdateBodyInfo();
 
