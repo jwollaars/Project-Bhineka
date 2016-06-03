@@ -13,7 +13,7 @@ public class BodyStats : MonoBehaviour
 
     private Coroutine m_HungerRoutine;
     private Coroutine m_ThirstRoutine;
-    private Coroutine m_BadCoroutineControl;
+    private Coroutine m_BadConditionCoroutine;
 
     [SerializeField]
     private int test;
@@ -28,7 +28,7 @@ public class BodyStats : MonoBehaviour
         m_HungerRoutine = StartCoroutine(HungerControl(20f));
         m_ThirstRoutine = StartCoroutine(ThirstControl(10f));
 
-        m_BadCoroutineControl = StartCoroutine(BadConditionControl(2f)); 
+        m_BadConditionCoroutine = StartCoroutine(BadConditionControl(2f)); 
     }
 
     void Update()
@@ -117,13 +117,13 @@ public class BodyStats : MonoBehaviour
     {
         IncreaseStat(ref m_MainStats.hunger, 1, 0, 100);
         yield return new WaitForSeconds(time / Time.timeScale);
-        StartCoroutine(HungerControl(time));
+        m_HungerRoutine = StartCoroutine(HungerControl(time));
     }
     private IEnumerator ThirstControl(float time)
     {
         IncreaseStat(ref m_MainStats.thirst, 1, 0, 100);
         yield return new WaitForSeconds(time / Time.timeScale);
-        StartCoroutine(ThirstControl(time));
+        m_ThirstRoutine = StartCoroutine(ThirstControl(time));
     }
     private IEnumerator BadConditionControl(float time)
     {
@@ -131,7 +131,7 @@ public class BodyStats : MonoBehaviour
         BadCondition(ref m_MainStats.health, m_MainStats.thirst, 60);
         BadCondition(ref m_MainStats.health, m_MainStats.infection, 30); 
         yield return new WaitForSeconds(time / Time.timeScale);
-        StartCoroutine(BadConditionControl(time));
+        m_BadConditionCoroutine = StartCoroutine(BadConditionControl(time));
     }
     
 
